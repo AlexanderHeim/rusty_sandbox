@@ -37,6 +37,14 @@ pub fn main() -> Result<(), String> {
             }
         }
 
+        if event_pump.mouse_state().right() {
+            let x = get_cursor_pos(&event_pump).0;
+            let y = get_cursor_pos(&event_pump).1;
+            if pplane.grid[(x/GRID_SLOT_SIZE.0) as usize][(y/GRID_SLOT_SIZE.1) as usize].is_none() {
+                pplane.grid[(x/GRID_SLOT_SIZE.0) as usize][(y/GRID_SLOT_SIZE.1) as usize] = Some(Particle::new(ParticleType::Water));
+            }
+        }
+
         for event in event_pump.poll_iter() {
             match event {
                 Event::Quit {..} |

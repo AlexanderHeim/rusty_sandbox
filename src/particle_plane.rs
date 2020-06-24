@@ -21,7 +21,7 @@ impl ParticlePlane {
                     if particle.updateable {
                         match particle.ptype {
                             ParticleType::Sand => move_powder(self, x, y),
-                            ParticleType::Water => move_powder(self, x, y),
+                            ParticleType::Water => move_liquid(self, x, y),
                         }
                     }
                 }
