@@ -2,6 +2,7 @@ extern crate sdl2;
 
 mod particle_plane;
 mod particle_behaviour;
+mod finals;
 
 use particle_plane::*;
 use sdl2::pixels::Color;
@@ -17,7 +18,7 @@ pub fn main() -> Result<(), String> {
     
     let sdl_context = sdl2::init().unwrap();
     let video_subsystem = sdl_context.video().unwrap();
-    let window = video_subsystem.window("rust-sdl2 demo", WINDOW_SIZE.0 as u32, WINDOW_SIZE.1 as u32)
+    let window = video_subsystem.window("rust-sdl2 demo", WINDOW_SIZE.0 as u32 + 100, WINDOW_SIZE.1 as u32 + 100)
         .position_centered()
         .build()
         .unwrap();
@@ -29,21 +30,29 @@ pub fn main() -> Result<(), String> {
     let mut pplane = ParticlePlane::new();
 
     'running: loop {
-        if event_pump.mouse_state().left() {
-            let x = get_cursor_pos(&event_pump).0;
-            let y = get_cursor_pos(&event_pump).1;
-            if pplane.grid[(x/GRID_SLOT_SIZE.0) as usize][(y/GRID_SLOT_SIZE.1) as usize].is_none() {
-                pplane.grid[(x/GRID_SLOT_SIZE.0) as usize][(y/GRID_SLOT_SIZE.1) as usize] = Some(Particle::new(ParticleType::Sand));
-            }
-        }
+        //HANDLE MOUSE INPUT
+        let mouse_x = get_cursor_pos(&event_pump).0;
+        let mouse_y = get_cursor_pos(&event_pump).1;
 
-        if event_pump.mouse_state().right() {
-            let x = get_cursor_pos(&event_pump).0;
-            let y = get_cursor_pos(&event_pump).1;
-            if pplane.grid[(x/GRID_SLOT_SIZE.0) as usize][(y/GRID_SLOT_SIZE.1) as usize].is_none() {
-                pplane.grid[(x/GRID_SLOT_SIZE.0) as usize][(y/GRID_SLOT_SIZE.1) as usize] = Some(Particle::new(ParticleType::Water));
+        //CHECK IF MOUSE INSIDE PARTICLE PLANE
+        if mouse_x < WINDOW_SIZE.0 as i32 && mouse_y < WINDOW_SIZE.1 as i32 {
+            if event_pump.mouse_state().left() {
+                let x = get_cursor_pos(&event_pump).0;
+                let y = get_cursor_pos(&event_pump).1;
+                if pplane.grid[(x/GRID_SLOT_SIZE.0) as usize][(y/GRID_SLOT_SIZE.1) as usize].is_none() {
+                    pplane.grid[(x/GRID_SLOT_SIZE.0) as usize][(y/GRID_SLOT_SIZE.1) as usize] = Some(Particle::new(ParticleType::Sand));
+                }
+            }
+    
+            if event_pump.mouse_state().right() {
+                let x = get_cursor_pos(&event_pump).0;
+                let y = get_cursor_pos(&event_pump).1;
+                if pplane.grid[(x/GRID_SLOT_SIZE.0) as usize][(y/GRID_SLOT_SIZE.1) as usize].is_none() {
+                    pplane.grid[(x/GRID_SLOT_SIZE.0) as usize][(y/GRID_SLOT_SIZE.1) as usize] = Some(Particle::new(ParticleType::Water));
+                }
             }
         }
+        
 
         for event in event_pump.poll_iter() {
             match event {
@@ -54,9 +63,10 @@ pub fn main() -> Result<(), String> {
                 _ => {}
             }
         }
-        if start.elapsed().as_millis() > 30 {
+        if start.elapsed().as_millis() > 18 {
             canvas.set_draw_color(Color::RGB(0, 0, 0));
             canvas.clear();
+            draw_plane_border(&mut canvas);
 
             // CODE
             pplane.reset_updateable();
@@ -74,4 +84,10 @@ pub fn main() -> Result<(), String> {
 
 fn get_cursor_pos(e: &sdl2::EventPump) -> (i32, i32){
     (e.mouse_state().x(), e.mouse_state().y())
+}
+
+fn draw_plane_border<T: sdl2::render::RenderTarget>(canvas: &mut sdl2::render::Canvas<T>){
+    canvas.set_draw_color(Color::RGB(255, 255, 255));
+    canvas.fill_rect(sdl2::rect::Rect::new(WINDOW_SIZE.0 as i32, 0, 2, WINDOW_SIZE.1 as u32 + 2));
+    canvas.fill_rect(sdl2::rect::Rect::new(0, WINDOW_SIZE.1 as i32, WINDOW_SIZE.0 as u32 + 1, 2));
 }
