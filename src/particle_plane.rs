@@ -6,13 +6,13 @@ use sdl2::pixels::Color;
 use rand::prelude::*;
 
 pub struct ParticlePlane {
-    pub grid: [[Option<Particle>; GRID_SLOT_AMOUNT.0 as usize]; GRID_SLOT_AMOUNT.1 as usize],
+    pub grid: Box<[[Option<Particle>; GRID_SLOT_AMOUNT.0 as usize]; GRID_SLOT_AMOUNT.1 as usize]>,
     pub rng: ThreadRng,
 }
 
 impl ParticlePlane {
     pub fn new() -> Self {
-        ParticlePlane { grid: [[None; GRID_SLOT_AMOUNT.0 as usize]; GRID_SLOT_AMOUNT.1 as usize], rng: thread_rng() }
+        ParticlePlane { grid: Box::new([[None; GRID_SLOT_AMOUNT.0 as usize]; GRID_SLOT_AMOUNT.1 as usize]), rng: thread_rng() }
     }
 
     pub fn update(&mut self) {
@@ -29,6 +29,7 @@ impl ParticlePlane {
                             ParticleType::MoltenGlass => move_liquid(self, x, y),
                             ParticleType::Glass => move_solid(self, x, y),
                             ParticleType::Water => move_liquid(self, x, y),
+                            ParticleType::Ice => move_solid(self, x, y),
                             ParticleType::Lava => move_liquid(self, x, y),
                         }
                     }
@@ -55,7 +56,8 @@ impl ParticlePlane {
                         ParticleType::Sand => SAND_COLOR,
                         ParticleType::MoltenGlass => MOLTENGLASS_COLOR,
                         ParticleType::Glass => GLASS_COLOR,
-                        ParticleType::Water => (0, 0, 230),
+                        ParticleType::Water => WATER_COLOR,
+                        ParticleType::Ice => ICE_COLOR,
                         ParticleType::Lava => (230, 10, 10),
                     };
                     canvas.set_draw_color(Color::RGB(color.0 + self.grid[x as usize][y as usize].unwrap().color_offset.0 as u8,
@@ -75,6 +77,7 @@ pub enum ParticleType {
     MoltenGlass,
     Glass,
     Water,
+    Ice,
     Lava,
 }
 
@@ -93,6 +96,7 @@ pub struct Particle {
     pub state: ParticleState,
     pub temp: u64,
     pub density: u16,
+    pub conductivity: u8,
     pub xd1: i8,
     pub xd2: i8,
     pub color_offset: (i8, i8, i8),
@@ -107,35 +111,48 @@ impl Particle {
                 ParticleType::Sand => SAND_STANDARD_TEMP,
                 ParticleType::MoltenGlass => MOLTENGLASS_STANDARD_TEMP,
                 ParticleType::Glass => GLASS_STANDARD_TEMP,
-                ParticleType::Water => 30000,
+                ParticleType::Water => WATER_STANDARD_TEMP,
                 ParticleType::Lava => 30000,
+                ParticleType::Ice => ICE_STANDARD_TEMP,
             },
             state: match ptype {
                 ParticleType::Sand => SAND_STATE,
                 ParticleType::MoltenGlass => MOLTENGLASS_STATE,
                 ParticleType::Glass => GLASS_STATE,
-                ParticleType::Water => ParticleState::Liquid,
+                ParticleType::Water => WATER_STATE,
+                ParticleType::Ice => ICE_STATE,
                 ParticleType::Lava => ParticleState::Liquid,
             },
             density: match ptype {
                 ParticleType::Sand => SAND_DENSITY,
                 ParticleType::MoltenGlass => MOLTENGLASS_DENSITY,
                 ParticleType::Glass => GLASS_DENSITY,
-                ParticleType::Water => 100,
+                ParticleType::Water => WATER_DENSITY,
+                ParticleType::Ice => ICE_DENSITY,
                 ParticleType::Lava => 300,
+            },
+            conductivity: match ptype {
+                ParticleType::Sand => 20,
+                ParticleType::MoltenGlass => 30,
+                ParticleType::Glass => 20,
+                ParticleType::Water => 70,
+                ParticleType::Ice => 60,
+                ParticleType::Lava => 30,
             },
             xd1: match ptype {
                 ParticleType::Sand => SAND_STANDARD_XD1,
                 ParticleType::MoltenGlass => MOLTENGLASS_STANDARD_XD1,
                 ParticleType::Glass => GLASS_STANDARD_XD1,
-                ParticleType::Water => 0,
+                ParticleType::Water => WATER_STANDARD_XD1,
+                ParticleType::Ice => ICE_STANDARD_XD1,
                 ParticleType::Lava => 0,
             },
             xd2: match ptype {
                 ParticleType::Sand => SAND_STANDARD_XD2,
                 ParticleType::MoltenGlass => MOLTENGLASS_STANDARD_XD2,
                 ParticleType::Glass => GLASS_STANDARD_XD2,
-                ParticleType::Water => 0,
+                ParticleType::Water => WATER_STANDARD_XD2,
+                ParticleType::Ice => ICE_STANDARD_XD2,
                 ParticleType::Lava => 0,
             },
             color_offset: (0, 0, 0), //TODO

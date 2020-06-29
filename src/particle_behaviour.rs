@@ -32,24 +32,27 @@ fn switch_particles(plane: &mut ParticlePlane, x: usize, y: usize, x_1: usize, y
 }
 
 pub fn transfer_heat(plane: &mut ParticlePlane, x: usize, y: usize){
-    let temp_batch = plane.grid[x][y].unwrap().temp/8;
     //Transfer UP
-    if y > 0 && plane.grid[x][y - 1].is_some() {
+    if y > 0 && plane.grid[x][y - 1].is_some() && plane.grid[x][y - 1].unwrap().temp < plane.grid[x][y].unwrap().temp {
+        let temp_batch = ((plane.grid[x][y].unwrap().temp - plane.grid[x][y - 1].unwrap().temp)*(plane.grid[x][y].unwrap().conductivity + plane.grid[x][y - 1].unwrap().conductivity) as u64)/800;
         plane.grid[x][y - 1].as_mut().unwrap().temp += temp_batch;
         plane.grid[x][y].as_mut().unwrap().temp -= temp_batch;
     }
     // Transfer DOWN
-    if y < GRID_SLOT_AMOUNT.1 as usize - 1 && plane.grid[x][y + 1].is_some() {
+    if y < GRID_SLOT_AMOUNT.1 as usize - 1 && plane.grid[x][y + 1].is_some()  && plane.grid[x][y + 1].unwrap().temp < plane.grid[x][y].unwrap().temp{
+        let temp_batch = ((plane.grid[x][y].unwrap().temp - plane.grid[x][y + 1].unwrap().temp)*(plane.grid[x][y].unwrap().conductivity + plane.grid[x][y + 1].unwrap().conductivity) as u64)/800;
         plane.grid[x][y + 1].as_mut().unwrap().temp += temp_batch;
         plane.grid[x][y].as_mut().unwrap().temp -= temp_batch;
     }
     // Transfer LEFT
-    if x > 0 && plane.grid[x - 1][y].is_some() {
+    if x > 0 && plane.grid[x - 1][y].is_some()  && plane.grid[x - 1][y].unwrap().temp < plane.grid[x][y].unwrap().temp{
+        let temp_batch = ((plane.grid[x][y].unwrap().temp - plane.grid[x - 1][y].unwrap().temp)*(plane.grid[x][y].unwrap().conductivity + plane.grid[x - 1][y].unwrap().conductivity) as u64)/800;
         plane.grid[x - 1][y].as_mut().unwrap().temp += temp_batch;
         plane.grid[x][y].as_mut().unwrap().temp -= temp_batch;
     }
     // Transfer RIGHT
-    if x < GRID_SLOT_AMOUNT.0 as usize - 1 && plane.grid[x + 1][y].is_some() {
+    if x < GRID_SLOT_AMOUNT.0 as usize - 1 && plane.grid[x + 1][y].is_some()  && plane.grid[x + 1][y].unwrap().temp < plane.grid[x][y].unwrap().temp{
+        let temp_batch = ((plane.grid[x][y].unwrap().temp - plane.grid[x + 1][y].unwrap().temp)*(plane.grid[x][y].unwrap().conductivity + plane.grid[x + 1][y].unwrap().conductivity) as u64)/800;
         plane.grid[x + 1][y].as_mut().unwrap().temp += temp_batch;
         plane.grid[x][y].as_mut().unwrap().temp -= temp_batch;
     }
@@ -230,12 +233,21 @@ pub fn update_specific_particle(plane: &mut ParticlePlane, x: usize, y: usize) {
                 plane.grid[x][y].as_mut().unwrap().state = MOLTENGLASS_STATE;
                 plane.grid[x][y].as_mut().unwrap().density = MOLTENGLASS_DENSITY;
             }
-        }
+        },
         ParticleType::Water => {
-
+            if plane.grid[x][y].unwrap().temp < 273 {
+                plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::Ice;
+                plane.grid[x][y].as_mut().unwrap().state = ICE_STATE;
+                plane.grid[x][y].as_mut().unwrap().density = ICE_DENSITY;
+            }
         },
-        ParticleType::Lava => {
-
-        },
+        ParticleType::Ice => {
+            if plane.grid[x][y].unwrap().temp > 273 {
+                plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::Water;
+                plane.grid[x][y].as_mut().unwrap().state = WATER_STATE;
+                plane.grid[x][y].as_mut().unwrap().density = WATER_DENSITY;
+            }
+        }
+        _ => (),
     }
 }
