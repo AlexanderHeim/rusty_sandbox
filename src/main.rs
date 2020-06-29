@@ -28,7 +28,7 @@ pub fn main() -> Result<(), String> {
     let mut start = Instant::now();
 
     let mut pplane = ParticlePlane::new();
-
+    let mut current_draw_particle_index: u8 = 1;
     'running: loop {
         //HANDLE MOUSE INPUT
         let mouse_x = get_cursor_pos(&event_pump).0;
@@ -40,16 +40,15 @@ pub fn main() -> Result<(), String> {
                 let x = get_cursor_pos(&event_pump).0;
                 let y = get_cursor_pos(&event_pump).1;
                 if pplane.grid[(x/GRID_SLOT_SIZE.0) as usize][(y/GRID_SLOT_SIZE.1) as usize].is_none() {
-                    pplane.grid[(x/GRID_SLOT_SIZE.0) as usize][(y/GRID_SLOT_SIZE.1) as usize] = Some(Particle::new(ParticleType::Sand));
+                    pplane.grid[(x/GRID_SLOT_SIZE.0) as usize][(y/GRID_SLOT_SIZE.1) as usize] = Some(get_draw_particle(current_draw_particle_index));
                 }
             }
-    
+        }
+        if mouse_x < WINDOW_SIZE.0 as i32 && mouse_y < WINDOW_SIZE.1 as i32 {
             if event_pump.mouse_state().right() {
                 let x = get_cursor_pos(&event_pump).0;
                 let y = get_cursor_pos(&event_pump).1;
-                if pplane.grid[(x/GRID_SLOT_SIZE.0) as usize][(y/GRID_SLOT_SIZE.1) as usize].is_none() {
-                    pplane.grid[(x/GRID_SLOT_SIZE.0) as usize][(y/GRID_SLOT_SIZE.1) as usize] = Some(Particle::new(ParticleType::Water));
-                }
+                pplane.grid[(x/GRID_SLOT_SIZE.0) as usize][(y/GRID_SLOT_SIZE.1) as usize] = Some(get_draw_particle(current_draw_particle_index));
             }
         }
         
@@ -60,6 +59,10 @@ pub fn main() -> Result<(), String> {
                 Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
                     break 'running
                 },
+                Event::KeyDown { keycode: Some(Keycode::Tab), ..} => {
+                    current_draw_particle_index += 1;
+                    if current_draw_particle_index > 6 { current_draw_particle_index = 1 };
+                }
                 _ => {}
             }
         }
@@ -90,4 +93,16 @@ fn draw_plane_border<T: sdl2::render::RenderTarget>(canvas: &mut sdl2::render::C
     canvas.set_draw_color(Color::RGB(255, 255, 255));
     canvas.fill_rect(sdl2::rect::Rect::new(WINDOW_SIZE.0 as i32, 0, 2, WINDOW_SIZE.1 as u32 + 2));
     canvas.fill_rect(sdl2::rect::Rect::new(0, WINDOW_SIZE.1 as i32, WINDOW_SIZE.0 as u32 + 1, 2));
+}
+
+fn get_draw_particle(index: u8) -> Particle {
+    return match index {
+        1 => Particle::new(ParticleType::Sand),
+        2 => Particle::new(ParticleType::Water),
+        3 => Particle::new(ParticleType::Lava),
+        4 => Particle::new(ParticleType::Stone),
+        5 => Particle::new(ParticleType::VaporisedSilicon),
+        6 => Particle::new(ParticleType::Ice),
+        _ => Particle::new(ParticleType::Glass),
+    }
 }

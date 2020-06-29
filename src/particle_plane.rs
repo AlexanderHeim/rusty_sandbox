@@ -6,13 +6,13 @@ use sdl2::pixels::Color;
 use rand::prelude::*;
 
 pub struct ParticlePlane {
-    pub grid: Box<[[Option<Particle>; GRID_SLOT_AMOUNT.0 as usize]; GRID_SLOT_AMOUNT.1 as usize]>,
+    pub grid: Box<[[Option<Particle>; GRID_SLOT_AMOUNT.1 as usize]; GRID_SLOT_AMOUNT.0 as usize]>,
     pub rng: ThreadRng,
 }
 
 impl ParticlePlane {
     pub fn new() -> Self {
-        ParticlePlane { grid: Box::new([[None; GRID_SLOT_AMOUNT.0 as usize]; GRID_SLOT_AMOUNT.1 as usize]), rng: thread_rng() }
+        ParticlePlane { grid: Box::new([[None; GRID_SLOT_AMOUNT.1 as usize]; GRID_SLOT_AMOUNT.0 as usize]), rng: rand::thread_rng() }
     }
 
     pub fn update(&mut self) {
@@ -30,7 +30,10 @@ impl ParticlePlane {
                             ParticleType::Glass => move_solid(self, x, y),
                             ParticleType::Water => move_liquid(self, x, y),
                             ParticleType::Ice => move_solid(self, x, y),
+                            ParticleType::Steam => move_gas(self, x, y),
+                            ParticleType::Stone => move_solid(self, x, y),
                             ParticleType::Lava => move_liquid(self, x, y),
+                            ParticleType::VaporisedSilicon => move_gas(self, x, y),
                         }
                     }
                 }
@@ -58,7 +61,10 @@ impl ParticlePlane {
                         ParticleType::Glass => GLASS_COLOR,
                         ParticleType::Water => WATER_COLOR,
                         ParticleType::Ice => ICE_COLOR,
-                        ParticleType::Lava => (230, 10, 10),
+                        ParticleType::Steam => STEAM_COLOR,
+                        ParticleType::Stone => STONE_COLOR,
+                        ParticleType::Lava => LAVA_COLOR,
+                        ParticleType::VaporisedSilicon => VAPORIZEDSILICON_COLOR,
                     };
                     canvas.set_draw_color(Color::RGB(color.0 + self.grid[x as usize][y as usize].unwrap().color_offset.0 as u8,
                                                      color.1 + self.grid[x as usize][y as usize].unwrap().color_offset.1 as u8,
@@ -78,7 +84,10 @@ pub enum ParticleType {
     Glass,
     Water,
     Ice,
+    Steam,
+    Stone,
     Lava,
+    VaporisedSilicon,
 }
 
 #[derive(Copy, Clone, PartialEq, Eq)]
@@ -112,8 +121,12 @@ impl Particle {
                 ParticleType::MoltenGlass => MOLTENGLASS_STANDARD_TEMP,
                 ParticleType::Glass => GLASS_STANDARD_TEMP,
                 ParticleType::Water => WATER_STANDARD_TEMP,
-                ParticleType::Lava => 30000,
                 ParticleType::Ice => ICE_STANDARD_TEMP,
+                ParticleType::Steam => STEAM_STANDARD_TEMP,
+                ParticleType::Stone => STONE_STANDARD_TEMP,
+                ParticleType::Lava => LAVA_STANDARD_TEMP,
+                ParticleType::VaporisedSilicon => VAPORIZEDSILICON_STANDARD_TEMP,
+                
             },
             state: match ptype {
                 ParticleType::Sand => SAND_STATE,
@@ -121,7 +134,10 @@ impl Particle {
                 ParticleType::Glass => GLASS_STATE,
                 ParticleType::Water => WATER_STATE,
                 ParticleType::Ice => ICE_STATE,
-                ParticleType::Lava => ParticleState::Liquid,
+                ParticleType::Steam => STEAM_STATE,
+                ParticleType::Stone => STONE_STATE,
+                ParticleType::Lava => LAVA_STATE,
+                ParticleType::VaporisedSilicon => VAPORIZEDSILICON_STATE,
             },
             density: match ptype {
                 ParticleType::Sand => SAND_DENSITY,
@@ -129,7 +145,10 @@ impl Particle {
                 ParticleType::Glass => GLASS_DENSITY,
                 ParticleType::Water => WATER_DENSITY,
                 ParticleType::Ice => ICE_DENSITY,
-                ParticleType::Lava => 300,
+                ParticleType::Steam => STEAM_DENSITY,
+                ParticleType::Stone => STONE_DENSITY,
+                ParticleType::Lava => LAVA_DENSITY,
+                ParticleType::VaporisedSilicon => VAPORIZEDSILICON_DENSITY,
             },
             conductivity: match ptype {
                 ParticleType::Sand => 20,
@@ -137,7 +156,10 @@ impl Particle {
                 ParticleType::Glass => 20,
                 ParticleType::Water => 70,
                 ParticleType::Ice => 60,
-                ParticleType::Lava => 30,
+                ParticleType::Steam => 90,
+                ParticleType::Stone => 45,
+                ParticleType::Lava => 60,
+                ParticleType::VaporisedSilicon => 90,
             },
             xd1: match ptype {
                 ParticleType::Sand => SAND_STANDARD_XD1,
@@ -145,7 +167,10 @@ impl Particle {
                 ParticleType::Glass => GLASS_STANDARD_XD1,
                 ParticleType::Water => WATER_STANDARD_XD1,
                 ParticleType::Ice => ICE_STANDARD_XD1,
-                ParticleType::Lava => 0,
+                ParticleType::Steam => STEAM_STANDARD_XD1,
+                ParticleType::Stone => STONE_STANDARD_XD1,
+                ParticleType::Lava => LAVA_STANDARD_XD1,
+                ParticleType::VaporisedSilicon => VAPORIZEDSILICON_STANDARD_XD1,
             },
             xd2: match ptype {
                 ParticleType::Sand => SAND_STANDARD_XD2,
@@ -153,7 +178,10 @@ impl Particle {
                 ParticleType::Glass => GLASS_STANDARD_XD2,
                 ParticleType::Water => WATER_STANDARD_XD2,
                 ParticleType::Ice => ICE_STANDARD_XD2,
-                ParticleType::Lava => 0,
+                ParticleType::Steam => STEAM_STANDARD_XD2,
+                ParticleType::Stone => STONE_STANDARD_XD2,
+                ParticleType::Lava => LAVA_STANDARD_XD2,
+                ParticleType::VaporisedSilicon => VAPORIZEDSILICON_STANDARD_XD2,
             },
             color_offset: (0, 0, 0), //TODO
             updateable: true,

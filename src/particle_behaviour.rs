@@ -1,6 +1,7 @@
 use crate::particle_plane::*;
 use crate::GRID_SLOT_AMOUNT;
 use crate::finals::*;
+use rand::*;
 
 pub fn move_powder(plane: &mut ParticlePlane, x: usize, y: usize) {
     if rule_1(plane, x, y) { return }
@@ -21,6 +22,10 @@ pub fn move_liquid(plane: &mut ParticlePlane, x: usize, y: usize) {
 pub fn move_solid(plane: &mut ParticlePlane, x: usize, y: usize) {
     if rule_1(plane, x, y) { return }
     if rule_6(plane, x, y) { return }
+}
+
+pub fn move_gas(plane: &mut ParticlePlane, x: usize, y: usize) {
+    if rule_13(plane, x, y) { return }
 }
 
 fn switch_particles(plane: &mut ParticlePlane, x: usize, y: usize, x_1: usize, y_1: usize) {
@@ -211,6 +216,28 @@ fn rule_12(plane: &mut ParticlePlane, x: usize, y: usize) -> bool {
     }
 }
 
+//RULE 13
+// MOVE RANDOMLY AND SWITCH WITH GASES RANDOMLY
+// SLOW VERSION
+fn rule_13(plane: &mut ParticlePlane, x: usize, y: usize) -> bool {
+    if rand::random() {
+        let r1 = plane.rng.gen_range(0, 3);
+        let r2 = plane.rng.gen_range(0, 3);
+        if x + r1 -1 > 0 && x + r1 -1 < GRID_SLOT_AMOUNT.0 as usize - 1 && y + r2 -1 > 0 && y + r2 -1 < GRID_SLOT_AMOUNT.1 as usize - 1 {
+            if plane.grid[x + r1 -1][y + r2 - 1].is_none() {
+                plane.grid[x][y].as_mut().unwrap().updateable = false;
+                plane.grid[x + r1 - 1][y + r2 -1] = plane.grid[x][y].take();
+                return true;
+            } else if plane.grid[x + r1 -1][y + r2 -1].unwrap().state == ParticleState::Gas {
+                switch_particles(plane, x, y, x + r1 -1, y + r2 -1);
+                return true;
+            }
+        }
+        return false;
+    }
+    return false;
+}
+
 pub fn update_specific_particle(plane: &mut ParticlePlane, x: usize, y: usize) {
     match plane.grid[x][y].unwrap().ptype {
         ParticleType::Sand => {
@@ -239,6 +266,13 @@ pub fn update_specific_particle(plane: &mut ParticlePlane, x: usize, y: usize) {
                 plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::Ice;
                 plane.grid[x][y].as_mut().unwrap().state = ICE_STATE;
                 plane.grid[x][y].as_mut().unwrap().density = ICE_DENSITY;
+                return;
+            }
+            if plane.grid[x][y].unwrap().temp > 373 {
+                plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::Steam;
+                plane.grid[x][y].as_mut().unwrap().state = STEAM_STATE;
+                plane.grid[x][y].as_mut().unwrap().density = STEAM_DENSITY;
+                return;
             }
         },
         ParticleType::Ice => {
@@ -247,7 +281,42 @@ pub fn update_specific_particle(plane: &mut ParticlePlane, x: usize, y: usize) {
                 plane.grid[x][y].as_mut().unwrap().state = WATER_STATE;
                 plane.grid[x][y].as_mut().unwrap().density = WATER_DENSITY;
             }
-        }
+        },
+        ParticleType::Steam => {
+            if plane.grid[x][y].unwrap().temp < 373 {
+                plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::Water;
+                plane.grid[x][y].as_mut().unwrap().state = WATER_STATE;
+                plane.grid[x][y].as_mut().unwrap().density = WATER_DENSITY;
+            }
+        },
+        ParticleType::Lava => {
+            if plane.grid[x][y].unwrap().temp < 800 {
+                plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::Stone;
+                plane.grid[x][y].as_mut().unwrap().state = STONE_STATE;
+                plane.grid[x][y].as_mut().unwrap().density = STONE_DENSITY;
+                return;
+            }
+            if plane.grid[x][y].unwrap().temp > 2628 {
+                plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::VaporisedSilicon;
+                plane.grid[x][y].as_mut().unwrap().state = VAPORIZEDSILICON_STATE;
+                plane.grid[x][y].as_mut().unwrap().density = VAPORIZEDSILICON_DENSITY;
+                return;
+            }
+        },
+        ParticleType::Stone => {
+            if plane.grid[x][y].unwrap().temp > 800 {
+                plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::Lava;
+                plane.grid[x][y].as_mut().unwrap().state = LAVA_STATE;
+                plane.grid[x][y].as_mut().unwrap().density = LAVA_DENSITY;
+            }
+        },
+        ParticleType::VaporisedSilicon => {
+            if plane.grid[x][y].unwrap().temp < 2628 {
+                plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::Lava;
+                plane.grid[x][y].as_mut().unwrap().state = LAVA_STATE;
+                plane.grid[x][y].as_mut().unwrap().density = LAVA_DENSITY;
+            }
+        },
         _ => (),
     }
 }
