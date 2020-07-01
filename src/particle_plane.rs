@@ -42,6 +42,9 @@ impl ParticlePlane {
                             ParticleType::Osmium => move_solid(self, x, y),
                             ParticleType::MoltenOsmium => move_liquid(self, x, y),
                             ParticleType::VaporisedOsmium => move_gas(self, x, y),
+                            ParticleType::XThermic => move_powder(self, x, y),
+                            ParticleType::MoltenXThermic => move_liquid(self, x, y),
+                            ParticleType::VaporisedXThermic => move_gas(self, x, y),
                         }
                         
                     }
@@ -78,6 +81,9 @@ impl ParticlePlane {
                         ParticleType::Osmium => OSMIUM_COLOR,
                         ParticleType::MoltenOsmium => MOLTENOSMIUM_COLOR,
                         ParticleType::VaporisedOsmium => VAPORISEDOSMIUM_COLOR,
+                        ParticleType::XThermic => XTHERMIC_COLOR,
+                        ParticleType::MoltenXThermic => MOLTENXTHERMIC_COLOR,
+                        ParticleType::VaporisedXThermic => VAPORISEDXTHERMIC_COLOR,
                     };
                     canvas.set_draw_color(Color::RGB(color.0 + self.grid[x as usize][y as usize].unwrap().color_offset.0 as u8,
                                                      color.1 + self.grid[x as usize][y as usize].unwrap().color_offset.1 as u8,
@@ -104,6 +110,9 @@ pub enum ParticleType {
     Osmium,
     MoltenOsmium,
     VaporisedOsmium,
+    XThermic,
+    MoltenXThermic,
+    VaporisedXThermic,
 }
 
 #[derive(Copy, Clone, PartialEq, Eq)]
@@ -145,6 +154,9 @@ impl Particle {
                 ParticleType::Osmium => OSMIUM_STANDARD_TEMP,
                 ParticleType::MoltenOsmium => MOLTENOSMIUM_STANDARD_TEMP,
                 ParticleType::VaporisedOsmium => VAPORISEDOSMIUM_STANDARD_TEMP,
+                ParticleType::XThermic => XTHERMIC_STANDARD_TEMP,
+                ParticleType::MoltenXThermic => MOLTENXTHERMIC_STANDARD_TEMP,
+                ParticleType::VaporisedXThermic => VAPORISEDXTHERMIC_STANDARD_TEMP,
                 
             },
             state: match ptype {
@@ -160,6 +172,9 @@ impl Particle {
                 ParticleType::Osmium => OSMIUM_STATE,
                 ParticleType::MoltenOsmium => MOLTENOSMIUM_STATE,
                 ParticleType::VaporisedOsmium => VAPORISEDOSMIUM_STATE,
+                ParticleType::XThermic => XTHERMIC_STATE,
+                ParticleType::MoltenXThermic => MOLTENXTHERMIC_STATE,
+                ParticleType::VaporisedXThermic => VAPORISEDXTHERMIC_STATE,
             },
             density: match ptype {
                 ParticleType::Sand => SAND_DENSITY,
@@ -174,6 +189,9 @@ impl Particle {
                 ParticleType::Osmium => OSMIUM_DENSITY,
                 ParticleType::MoltenOsmium => MOLTENOSMIUM_DENSITY,
                 ParticleType::VaporisedOsmium => VAPORISEDOSMIUM_DENSITY,
+                ParticleType::XThermic => XTHERMIC_DENSITY,
+                ParticleType::MoltenXThermic => MOLTENXTHERMIC_DENSITY,
+                ParticleType::VaporisedXThermic => VAPORISEDXTHERMIC_DENSITY,
             },
             conductivity: match ptype {
                 ParticleType::Sand => 20,
@@ -188,6 +206,9 @@ impl Particle {
                 ParticleType::Osmium => 80,
                 ParticleType::MoltenOsmium => 85,
                 ParticleType::VaporisedOsmium => 99,
+                ParticleType::XThermic => 100,
+                ParticleType::MoltenXThermic => 100,
+                ParticleType::VaporisedXThermic => 100,
             },
             xd1: match ptype {
                 ParticleType::Sand => SAND_STANDARD_XD1,
@@ -202,6 +223,9 @@ impl Particle {
                 ParticleType::Osmium => OSMIUM_STANDARD_XD1,
                 ParticleType::MoltenOsmium => MOLTENOSMIUM_STANDARD_XD1,
                 ParticleType::VaporisedOsmium => VAPORISEDOSMIUM_STANDARD_XD1,
+                ParticleType::XThermic => XTHERMIC_STANDARD_XD1,
+                ParticleType::MoltenXThermic => MOLTENXTHERMIC_STANDARD_XD1,
+                ParticleType::VaporisedXThermic => VAPORISEDXTHERMIC_STANDARD_XD1,
             },
             xd2: match ptype {
                 ParticleType::Sand => SAND_STANDARD_XD2,
@@ -216,6 +240,9 @@ impl Particle {
                 ParticleType::Osmium => OSMIUM_STANDARD_XD2,
                 ParticleType::MoltenOsmium => MOLTENOSMIUM_STANDARD_XD2,
                 ParticleType::VaporisedOsmium => VAPORISEDOSMIUM_STANDARD_XD2,
+                ParticleType::XThermic => XTHERMIC_STANDARD_XD2,
+                ParticleType::MoltenXThermic => MOLTENXTHERMIC_STANDARD_XD2,
+                ParticleType::VaporisedXThermic => VAPORISEDXTHERMIC_STANDARD_XD2,
             },
             color_offset: (0, 0, 0), //TODO
             updateable: true,

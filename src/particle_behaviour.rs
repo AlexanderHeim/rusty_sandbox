@@ -353,5 +353,33 @@ pub fn update_specific_particle(plane: &mut ParticlePlane, x: usize, y: usize) {
                 plane.grid[x][y].as_mut().unwrap().density = MOLTENOSMIUM_DENSITY;
             }
         },
+        ParticleType::XThermic => {
+            if plane.grid[x][y].unwrap().temp > 10 {
+                plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::MoltenXThermic;
+                plane.grid[x][y].as_mut().unwrap().state = MOLTENXTHERMIC_STATE;
+                plane.grid[x][y].as_mut().unwrap().density = MOLTENXTHERMIC_DENSITY;
+            }
+        },
+        ParticleType::MoltenXThermic => {
+            if plane.grid[x][y].unwrap().temp < 10 {
+                plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::XThermic;
+                plane.grid[x][y].as_mut().unwrap().state = XTHERMIC_STATE;
+                plane.grid[x][y].as_mut().unwrap().density = XTHERMIC_DENSITY;
+                return;
+            }
+            if plane.grid[x][y].unwrap().temp > 14000 {
+                plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::VaporisedXThermic;
+                plane.grid[x][y].as_mut().unwrap().state = VAPORISEDXTHERMIC_STATE;
+                plane.grid[x][y].as_mut().unwrap().density = VAPORISEDXTHERMIC_DENSITY;
+                return;
+            }
+        },
+        ParticleType::VaporisedXThermic => {
+            if plane.grid[x][y].unwrap().temp < 14000 {
+                plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::MoltenXThermic;
+                plane.grid[x][y].as_mut().unwrap().state = MOLTENXTHERMIC_STATE;
+                plane.grid[x][y].as_mut().unwrap().density = MOLTENXTHERMIC_DENSITY;
+            }
+        },
     }
 }

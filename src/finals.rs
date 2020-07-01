@@ -83,3 +83,24 @@ pub const VAPORISEDOSMIUM_DENSITY: u16 = 0;
 pub const VAPORISEDOSMIUM_STANDARD_XD1: i8 = 0;
 pub const VAPORISEDOSMIUM_STANDARD_XD2: i8 = 0;
 pub const VAPORISEDOSMIUM_COLOR: (u8, u8, u8) = (250, 200, 200);
+
+pub const XTHERMIC_STANDARD_TEMP: u64 = 0;
+pub const XTHERMIC_STATE: ParticleState = ParticleState::Powder;
+pub const XTHERMIC_DENSITY: u16 = 1200;
+pub const XTHERMIC_STANDARD_XD1: i8 = 0;
+pub const XTHERMIC_STANDARD_XD2: i8 = 0;
+pub const XTHERMIC_COLOR: (u8, u8, u8) = (100, 120, 255);
+
+pub const MOLTENXTHERMIC_STANDARD_TEMP: u64 = 100;
+pub const MOLTENXTHERMIC_STATE: ParticleState = ParticleState::Liquid;
+pub const MOLTENXTHERMIC_DENSITY: u16 = 1500;
+pub const MOLTENXTHERMIC_STANDARD_XD1: i8 = 0;
+pub const MOLTENXTHERMIC_STANDARD_XD2: i8 = 0;
+pub const MOLTENXTHERMIC_COLOR: (u8, u8, u8) = (100, 120, 225);
+
+pub const VAPORISEDXTHERMIC_STANDARD_TEMP: u64 = 16500;
+pub const VAPORISEDXTHERMIC_STATE: ParticleState = ParticleState::Gas;
+pub const VAPORISEDXTHERMIC_DENSITY: u16 = 0;
+pub const VAPORISEDXTHERMIC_STANDARD_XD1: i8 = 0;
+pub const VAPORISEDXTHERMIC_STANDARD_XD2: i8 = 0;
+pub const VAPORISEDXTHERMIC_COLOR: (u8, u8, u8) = (150, 120, 255);
