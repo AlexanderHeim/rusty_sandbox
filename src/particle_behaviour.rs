@@ -25,6 +25,8 @@ pub fn move_solid(plane: &mut ParticlePlane, x: usize, y: usize) {
 }
 
 pub fn move_gas(plane: &mut ParticlePlane, x: usize, y: usize) {
+    let factor = plane.rng.gen_range(9994, 10000) as f64 / 10000 as f64;
+    if rand::random() { plane.grid[x][y].as_mut().unwrap().temp = (plane.grid[x][y].unwrap().temp as f64 * factor) as u64; }
     if rule_13(plane, x, y) { return }
 }
 
@@ -61,6 +63,7 @@ pub fn transfer_heat(plane: &mut ParticlePlane, x: usize, y: usize){
         plane.grid[x + 1][y].as_mut().unwrap().temp += temp_batch;
         plane.grid[x][y].as_mut().unwrap().temp -= temp_batch;
     }
+    
 }
 //RULE 1
 // FALL ONE IF NONE BELOW

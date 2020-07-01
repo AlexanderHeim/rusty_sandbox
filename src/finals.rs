@@ -28,7 +28,7 @@ pub const WATER_STANDARD_XD1: i8 = 0;
 pub const WATER_STANDARD_XD2: i8 = 0;
 pub const WATER_COLOR: (u8, u8, u8) = (0, 0, 255);
 
-pub const ICE_STANDARD_TEMP: u64 = 0;
+pub const ICE_STANDARD_TEMP: u64 = 120;
 pub const ICE_STATE: ParticleState = ParticleState::Solid;
 pub const ICE_DENSITY: u16 = 913;
 pub const ICE_STANDARD_XD1: i8 = 0;
@@ -56,7 +56,7 @@ pub const LAVA_STANDARD_XD1: i8 = 0;
 pub const LAVA_STANDARD_XD2: i8 = 0;
 pub const LAVA_COLOR: (u8, u8, u8) = (255, 30, 30);
 
-pub const VAPORIZEDSILICON_STANDARD_TEMP: u64 = 2628;
+pub const VAPORIZEDSILICON_STANDARD_TEMP: u64 = 2828;
 pub const VAPORIZEDSILICON_STATE: ParticleState = ParticleState::Gas;
 pub const VAPORIZEDSILICON_DENSITY: u16 = 0;
 pub const VAPORIZEDSILICON_STANDARD_XD1: i8 = 0;

@@ -3,6 +3,7 @@ extern crate sdl2;
 mod particle_plane;
 mod particle_behaviour;
 mod finals;
+mod gui;
 
 use particle_plane::*;
 use sdl2::pixels::Color;
@@ -76,6 +77,7 @@ pub fn main() -> Result<(), String> {
             pplane.update();
             pplane.draw(&mut canvas);
 
+            display_current_draw_particle(&mut canvas, 30, 960, current_draw_particle_index);
             canvas.present();
             start = Instant::now();
         }
@@ -104,5 +106,17 @@ fn get_draw_particle(index: u8) -> Particle {
         5 => Particle::new(ParticleType::VaporisedSilicon),
         6 => Particle::new(ParticleType::Ice),
         _ => Particle::new(ParticleType::Glass),
+    }
+}
+
+pub fn display_current_draw_particle<T: sdl2::render::RenderTarget>(canvas: &mut sdl2::render::Canvas<T>, x: i32, y: i32, index: u8){
+    match index {
+        1 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("SAND")),
+        2 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("WATER")),
+        3 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("LAVA")),
+        4 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("STONE")),
+        5 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("VAPORISEDSILICON")),
+        6 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("ICE")),
+        _ => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("GLASS")),
     }
 }

@@ -16,11 +16,13 @@ impl ParticlePlane {
     }
 
     pub fn update(&mut self) {
+        let mut heat_count: u128 = 0;
         for x in 0..GRID_SLOT_AMOUNT.0 as usize {
             for y in 0..GRID_SLOT_AMOUNT.1 as usize {
                 if self.grid[x][y].is_some() {
                     update_specific_particle(self, x, y);
                     transfer_heat(self, x, y);
+                    heat_count += self.grid[x][y].unwrap().temp as u128;
                 }
                 if let Some(particle) = &self.grid[x][y] {
                     if particle.updateable {
@@ -39,6 +41,7 @@ impl ParticlePlane {
                 }
             }
         }
+        println!("{}", heat_count);
     }
 
     pub fn reset_updateable(&mut self) {
