@@ -19,8 +19,8 @@ impl ParticlePlane {
         for x in 0..GRID_SLOT_AMOUNT.0 as usize {
             for y in 0..GRID_SLOT_AMOUNT.1 as usize {
                 if self.grid[x][y].is_some() {
-                    update_specific_particle(self, x, y);
                     transfer_heat(self, x, y);
+                    update_specific_particle(self, x, y);
                 }
                 
             }
@@ -39,6 +39,9 @@ impl ParticlePlane {
                             ParticleType::Stone => move_solid(self, x, y),
                             ParticleType::Lava => move_liquid(self, x, y),
                             ParticleType::VaporisedSilicon => move_gas(self, x, y),
+                            ParticleType::Osmium => move_solid(self, x, y),
+                            ParticleType::MoltenOsmium => move_liquid(self, x, y),
+                            ParticleType::VaporisedOsmium => move_gas(self, x, y),
                         }
                         
                     }
@@ -72,6 +75,9 @@ impl ParticlePlane {
                         ParticleType::Stone => STONE_COLOR,
                         ParticleType::Lava => LAVA_COLOR,
                         ParticleType::VaporisedSilicon => VAPORIZEDSILICON_COLOR,
+                        ParticleType::Osmium => OSMIUM_COLOR,
+                        ParticleType::MoltenOsmium => MOLTENOSMIUM_COLOR,
+                        ParticleType::VaporisedOsmium => VAPORISEDOSMIUM_COLOR,
                     };
                     canvas.set_draw_color(Color::RGB(color.0 + self.grid[x as usize][y as usize].unwrap().color_offset.0 as u8,
                                                      color.1 + self.grid[x as usize][y as usize].unwrap().color_offset.1 as u8,
@@ -95,6 +101,9 @@ pub enum ParticleType {
     Stone,
     Lava,
     VaporisedSilicon,
+    Osmium,
+    MoltenOsmium,
+    VaporisedOsmium,
 }
 
 #[derive(Copy, Clone, PartialEq, Eq)]
@@ -133,6 +142,9 @@ impl Particle {
                 ParticleType::Stone => STONE_STANDARD_TEMP,
                 ParticleType::Lava => LAVA_STANDARD_TEMP,
                 ParticleType::VaporisedSilicon => VAPORIZEDSILICON_STANDARD_TEMP,
+                ParticleType::Osmium => OSMIUM_STANDARD_TEMP,
+                ParticleType::MoltenOsmium => MOLTENOSMIUM_STANDARD_TEMP,
+                ParticleType::VaporisedOsmium => VAPORISEDOSMIUM_STANDARD_TEMP,
                 
             },
             state: match ptype {
@@ -145,6 +157,9 @@ impl Particle {
                 ParticleType::Stone => STONE_STATE,
                 ParticleType::Lava => LAVA_STATE,
                 ParticleType::VaporisedSilicon => VAPORIZEDSILICON_STATE,
+                ParticleType::Osmium => OSMIUM_STATE,
+                ParticleType::MoltenOsmium => MOLTENOSMIUM_STATE,
+                ParticleType::VaporisedOsmium => VAPORISEDOSMIUM_STATE,
             },
             density: match ptype {
                 ParticleType::Sand => SAND_DENSITY,
@@ -156,6 +171,9 @@ impl Particle {
                 ParticleType::Stone => STONE_DENSITY,
                 ParticleType::Lava => LAVA_DENSITY,
                 ParticleType::VaporisedSilicon => VAPORIZEDSILICON_DENSITY,
+                ParticleType::Osmium => OSMIUM_DENSITY,
+                ParticleType::MoltenOsmium => MOLTENOSMIUM_DENSITY,
+                ParticleType::VaporisedOsmium => VAPORISEDOSMIUM_DENSITY,
             },
             conductivity: match ptype {
                 ParticleType::Sand => 20,
@@ -167,6 +185,9 @@ impl Particle {
                 ParticleType::Stone => 45,
                 ParticleType::Lava => 60,
                 ParticleType::VaporisedSilicon => 90,
+                ParticleType::Osmium => 80,
+                ParticleType::MoltenOsmium => 85,
+                ParticleType::VaporisedOsmium => 99,
             },
             xd1: match ptype {
                 ParticleType::Sand => SAND_STANDARD_XD1,
@@ -178,6 +199,9 @@ impl Particle {
                 ParticleType::Stone => STONE_STANDARD_XD1,
                 ParticleType::Lava => LAVA_STANDARD_XD1,
                 ParticleType::VaporisedSilicon => VAPORIZEDSILICON_STANDARD_XD1,
+                ParticleType::Osmium => OSMIUM_STANDARD_XD1,
+                ParticleType::MoltenOsmium => MOLTENOSMIUM_STANDARD_XD1,
+                ParticleType::VaporisedOsmium => VAPORISEDOSMIUM_STANDARD_XD1,
             },
             xd2: match ptype {
                 ParticleType::Sand => SAND_STANDARD_XD2,
@@ -189,6 +213,9 @@ impl Particle {
                 ParticleType::Stone => STONE_STANDARD_XD2,
                 ParticleType::Lava => LAVA_STANDARD_XD2,
                 ParticleType::VaporisedSilicon => VAPORIZEDSILICON_STANDARD_XD2,
+                ParticleType::Osmium => OSMIUM_STANDARD_XD2,
+                ParticleType::MoltenOsmium => MOLTENOSMIUM_STANDARD_XD2,
+                ParticleType::VaporisedOsmium => VAPORISEDOSMIUM_STANDARD_XD2,
             },
             color_offset: (0, 0, 0), //TODO
             updateable: true,

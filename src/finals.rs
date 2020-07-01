@@ -62,3 +62,24 @@ pub const VAPORIZEDSILICON_DENSITY: u16 = 0;
 pub const VAPORIZEDSILICON_STANDARD_XD1: i8 = 0;
 pub const VAPORIZEDSILICON_STANDARD_XD2: i8 = 0;
 pub const VAPORIZEDSILICON_COLOR: (u8, u8, u8) = (255, 180, 220);
+
+pub const OSMIUM_STANDARD_TEMP: u64 = 300;
+pub const OSMIUM_STATE: ParticleState = ParticleState::Solid;
+pub const OSMIUM_DENSITY: u16 = 22500;
+pub const OSMIUM_STANDARD_XD1: i8 = 0;
+pub const OSMIUM_STANDARD_XD2: i8 = 0;
+pub const OSMIUM_COLOR: (u8, u8, u8) = (203, 205, 205);
+
+pub const MOLTENOSMIUM_STANDARD_TEMP: u64 = 4700;
+pub const MOLTENOSMIUM_STATE: ParticleState = ParticleState::Liquid;
+pub const MOLTENOSMIUM_DENSITY: u16 = 20000;
+pub const MOLTENOSMIUM_STANDARD_XD1: i8 = 0;
+pub const MOLTENOSMIUM_STANDARD_XD2: i8 = 0;
+pub const MOLTENOSMIUM_COLOR: (u8, u8, u8) = (240, 205, 205);
+
+pub const VAPORISEDOSMIUM_STANDARD_TEMP: u64 = 5400;
+pub const VAPORISEDOSMIUM_STATE: ParticleState = ParticleState::Gas;
+pub const VAPORISEDOSMIUM_DENSITY: u16 = 0;
+pub const VAPORISEDOSMIUM_STANDARD_XD1: i8 = 0;
+pub const VAPORISEDOSMIUM_STANDARD_XD2: i8 = 0;
+pub const VAPORISEDOSMIUM_COLOR: (u8, u8, u8) = (250, 200, 200);

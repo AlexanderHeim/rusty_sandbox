@@ -244,21 +244,26 @@ fn rule_13(plane: &mut ParticlePlane, x: usize, y: usize) -> bool {
 pub fn update_specific_particle(plane: &mut ParticlePlane, x: usize, y: usize) {
     match plane.grid[x][y].unwrap().ptype {
         ParticleType::Sand => {
-            if plane.grid[x][y].unwrap().temp > 8000 {
+            if plane.grid[x][y].unwrap().temp > 1900 {
                 plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::MoltenGlass;
                 plane.grid[x][y].as_mut().unwrap().density = MOLTENGLASS_DENSITY;
                 plane.grid[x][y].as_mut().unwrap().state = MOLTENGLASS_STATE;
             }
         },
         ParticleType::MoltenGlass => {
-            if plane.grid[x][y].unwrap().temp < 8000 {
+            if plane.grid[x][y].unwrap().temp < 1900 {
                 plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::Glass;
                 plane.grid[x][y].as_mut().unwrap().state = GLASS_STATE;
                 plane.grid[x][y].as_mut().unwrap().density = GLASS_DENSITY;
             }
+            if plane.grid[x][y].unwrap().temp > 2628 {
+                plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::VaporisedSilicon;
+                plane.grid[x][y].as_mut().unwrap().state = VAPORIZEDSILICON_STATE;
+                plane.grid[x][y].as_mut().unwrap().density = VAPORIZEDSILICON_DENSITY;
+            }
         },
         ParticleType::Glass => {
-            if plane.grid[x][y].unwrap().temp > 8000 {
+            if plane.grid[x][y].unwrap().temp > 1900 {
                 plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::MoltenGlass;
                 plane.grid[x][y].as_mut().unwrap().state = MOLTENGLASS_STATE;
                 plane.grid[x][y].as_mut().unwrap().density = MOLTENGLASS_DENSITY;
@@ -320,6 +325,33 @@ pub fn update_specific_particle(plane: &mut ParticlePlane, x: usize, y: usize) {
                 plane.grid[x][y].as_mut().unwrap().density = LAVA_DENSITY;
             }
         },
-        _ => (),
+        ParticleType::Osmium => {
+            if plane.grid[x][y].unwrap().temp > 3306 {
+                plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::MoltenOsmium;
+                plane.grid[x][y].as_mut().unwrap().state = MOLTENOSMIUM_STATE;
+                plane.grid[x][y].as_mut().unwrap().density = MOLTENOSMIUM_DENSITY;
+            }
+        },
+        ParticleType::MoltenOsmium => {
+            if plane.grid[x][y].unwrap().temp < 3306 {
+                plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::Osmium;
+                plane.grid[x][y].as_mut().unwrap().state = OSMIUM_STATE;
+                plane.grid[x][y].as_mut().unwrap().density = OSMIUM_DENSITY;
+                return;
+            }
+            if plane.grid[x][y].unwrap().temp > 5285 {
+                plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::VaporisedOsmium;
+                plane.grid[x][y].as_mut().unwrap().state = VAPORISEDOSMIUM_STATE;
+                plane.grid[x][y].as_mut().unwrap().density = VAPORISEDOSMIUM_DENSITY;
+                return;
+            }
+        },
+        ParticleType::VaporisedOsmium => {
+            if plane.grid[x][y].unwrap().temp < 5285 {
+                plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::MoltenOsmium;
+                plane.grid[x][y].as_mut().unwrap().state = MOLTENOSMIUM_STATE;
+                plane.grid[x][y].as_mut().unwrap().density = MOLTENOSMIUM_DENSITY;
+            }
+        },
     }
 }

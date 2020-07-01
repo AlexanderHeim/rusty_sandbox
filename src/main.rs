@@ -62,7 +62,7 @@ pub fn main() -> Result<(), String> {
                 },
                 Event::KeyDown { keycode: Some(Keycode::Tab), ..} => {
                     current_draw_particle_index += 1;
-                    if current_draw_particle_index > 6 { current_draw_particle_index = 1 };
+                    if current_draw_particle_index > 12 { current_draw_particle_index = 1 };
                 }
                 _ => {}
             }
@@ -91,7 +91,9 @@ fn get_cursor_pos(e: &sdl2::EventPump) -> (i32, i32){
     (e.mouse_state().x(), e.mouse_state().y())
 }
 
+
 fn draw_plane_border<T: sdl2::render::RenderTarget>(canvas: &mut sdl2::render::Canvas<T>){
+    #![allow(warnings)]
     canvas.set_draw_color(Color::RGB(255, 255, 255));
     canvas.fill_rect(sdl2::rect::Rect::new(WINDOW_SIZE.0 as i32, 0, 2, WINDOW_SIZE.1 as u32 + 2));
     canvas.fill_rect(sdl2::rect::Rect::new(0, WINDOW_SIZE.1 as i32, WINDOW_SIZE.0 as u32 + 1, 2));
@@ -100,11 +102,17 @@ fn draw_plane_border<T: sdl2::render::RenderTarget>(canvas: &mut sdl2::render::C
 fn get_draw_particle(index: u8) -> Particle {
     return match index {
         1 => Particle::new(ParticleType::Sand),
-        2 => Particle::new(ParticleType::Water),
-        3 => Particle::new(ParticleType::Lava),
-        4 => Particle::new(ParticleType::Stone),
-        5 => Particle::new(ParticleType::VaporisedSilicon),
-        6 => Particle::new(ParticleType::Ice),
+        2 => Particle::new(ParticleType::Glass),
+        3 => Particle::new(ParticleType::MoltenGlass),
+        4 => Particle::new(ParticleType::Ice),
+        5 => Particle::new(ParticleType::Water),
+        6 => Particle::new(ParticleType::Steam),
+        7 => Particle::new(ParticleType::Stone),
+        8 => Particle::new(ParticleType::Lava),
+        9 => Particle::new(ParticleType::VaporisedSilicon),
+        10 => Particle::new(ParticleType::Osmium),
+        11 => Particle::new(ParticleType::MoltenOsmium),
+        12 => Particle::new(ParticleType::VaporisedOsmium),
         _ => Particle::new(ParticleType::Glass),
     }
 }
@@ -112,11 +120,17 @@ fn get_draw_particle(index: u8) -> Particle {
 pub fn display_current_draw_particle<T: sdl2::render::RenderTarget>(canvas: &mut sdl2::render::Canvas<T>, x: i32, y: i32, index: u8){
     match index {
         1 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("SAND")),
-        2 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("WATER")),
-        3 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("LAVA")),
-        4 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("STONE")),
-        5 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("VAPORISEDSILICON")),
-        6 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("ICE")),
+        2 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("GLASS")),
+        3 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("MOLTEN GLASS")),
+        4 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("ICE")),
+        5 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("WATER")),
+        6 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("STEAM")),
+        7 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("STONE")),
+        8 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("LAVA")),
+        9 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("VAPORISED SILICON")),
+        10 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("OSMIUM")),
+        11 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("MOLTEN OSMIUM")),
+        12 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("VAPORISED OSMIUM")),
         _ => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("GLASS")),
     }
 }
