@@ -381,5 +381,13 @@ pub fn update_specific_particle(plane: &mut ParticlePlane, x: usize, y: usize) {
                 plane.grid[x][y].as_mut().unwrap().density = MOLTENXTHERMIC_DENSITY;
             }
         },
+        ParticleType::SuperSolidWolfram => {
+            //TODO: ADD MOLTEN WOLFRAM
+            if plane.grid[x][y].unwrap().temp > 3695 {
+                plane.grid[x][y].as_mut().unwrap().ptype = ParticleType::MoltenOsmium;
+                plane.grid[x][y].as_mut().unwrap().state = MOLTENOSMIUM_STATE;
+                plane.grid[x][y].as_mut().unwrap().density = MOLTENOSMIUM_DENSITY;
+            }
+        },
     }
 }

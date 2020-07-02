@@ -45,6 +45,7 @@ impl ParticlePlane {
                             ParticleType::XThermic => move_powder(self, x, y),
                             ParticleType::MoltenXThermic => move_liquid(self, x, y),
                             ParticleType::VaporisedXThermic => move_gas(self, x, y),
+                            ParticleType::SuperSolidWolfram => (),
                         }
                         
                     }
@@ -84,6 +85,7 @@ impl ParticlePlane {
                         ParticleType::XThermic => XTHERMIC_COLOR,
                         ParticleType::MoltenXThermic => MOLTENXTHERMIC_COLOR,
                         ParticleType::VaporisedXThermic => VAPORISEDXTHERMIC_COLOR,
+                        ParticleType::SuperSolidWolfram => SUPERSOLIDWOLFRAM_COLOR,
                     };
                     canvas.set_draw_color(Color::RGB(color.0 + self.grid[x as usize][y as usize].unwrap().color_offset.0 as u8,
                                                      color.1 + self.grid[x as usize][y as usize].unwrap().color_offset.1 as u8,
@@ -113,6 +115,7 @@ pub enum ParticleType {
     XThermic,
     MoltenXThermic,
     VaporisedXThermic,
+    SuperSolidWolfram,
 }
 
 #[derive(Copy, Clone, PartialEq, Eq)]
@@ -157,6 +160,7 @@ impl Particle {
                 ParticleType::XThermic => XTHERMIC_STANDARD_TEMP,
                 ParticleType::MoltenXThermic => MOLTENXTHERMIC_STANDARD_TEMP,
                 ParticleType::VaporisedXThermic => VAPORISEDXTHERMIC_STANDARD_TEMP,
+                ParticleType::SuperSolidWolfram => SUPERSOLIDWOLFRAM_STANDARD_TEMP,
                 
             },
             state: match ptype {
@@ -175,6 +179,7 @@ impl Particle {
                 ParticleType::XThermic => XTHERMIC_STATE,
                 ParticleType::MoltenXThermic => MOLTENXTHERMIC_STATE,
                 ParticleType::VaporisedXThermic => VAPORISEDXTHERMIC_STATE,
+                ParticleType::SuperSolidWolfram => SUPERSOLIDWOLFRAM_STATE,
             },
             density: match ptype {
                 ParticleType::Sand => SAND_DENSITY,
@@ -192,6 +197,7 @@ impl Particle {
                 ParticleType::XThermic => XTHERMIC_DENSITY,
                 ParticleType::MoltenXThermic => MOLTENXTHERMIC_DENSITY,
                 ParticleType::VaporisedXThermic => VAPORISEDXTHERMIC_DENSITY,
+                ParticleType::SuperSolidWolfram => SUPERSOLIDWOLFRAM_DENSITY,
             },
             conductivity: match ptype {
                 ParticleType::Sand => 20,
@@ -209,6 +215,7 @@ impl Particle {
                 ParticleType::XThermic => 100,
                 ParticleType::MoltenXThermic => 100,
                 ParticleType::VaporisedXThermic => 100,
+                ParticleType::SuperSolidWolfram => 70,
             },
             xd1: match ptype {
                 ParticleType::Sand => SAND_STANDARD_XD1,
@@ -226,6 +233,7 @@ impl Particle {
                 ParticleType::XThermic => XTHERMIC_STANDARD_XD1,
                 ParticleType::MoltenXThermic => MOLTENXTHERMIC_STANDARD_XD1,
                 ParticleType::VaporisedXThermic => VAPORISEDXTHERMIC_STANDARD_XD1,
+                ParticleType::SuperSolidWolfram => SUPERSOLIDWOLFRAM_STANDARD_XD1,
             },
             xd2: match ptype {
                 ParticleType::Sand => SAND_STANDARD_XD2,
@@ -243,6 +251,7 @@ impl Particle {
                 ParticleType::XThermic => XTHERMIC_STANDARD_XD2,
                 ParticleType::MoltenXThermic => MOLTENXTHERMIC_STANDARD_XD2,
                 ParticleType::VaporisedXThermic => VAPORISEDXTHERMIC_STANDARD_XD2,
+                ParticleType::SuperSolidWolfram => SUPERSOLIDWOLFRAM_STANDARD_XD2,
             },
             color_offset: (0, 0, 0), //TODO
             updateable: true,

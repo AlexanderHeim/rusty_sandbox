@@ -62,7 +62,7 @@ pub fn main() -> Result<(), String> {
                 },
                 Event::KeyDown { keycode: Some(Keycode::Tab), ..} => {
                     current_draw_particle_index += 1;
-                    if current_draw_particle_index > 15 { current_draw_particle_index = 1 };
+                    if current_draw_particle_index > 16 { current_draw_particle_index = 1 };
                 }
                 _ => {}
             }
@@ -116,6 +116,7 @@ fn get_draw_particle(index: u8) -> Particle {
         13 => Particle::new(ParticleType::XThermic),
         14 => Particle::new(ParticleType::MoltenXThermic),
         15 => Particle::new(ParticleType::VaporisedXThermic),
+        16 => Particle::new(ParticleType::SuperSolidWolfram),
         _ => Particle::new(ParticleType::Glass),
     }
 }
@@ -137,6 +138,7 @@ pub fn display_current_draw_particle<T: sdl2::render::RenderTarget>(canvas: &mut
         13 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("XTHERMIC")),
         14 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("MOLTEN XTHERMIC")),
         15 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("VAPORISED XTHERMIC")),
+        16 => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("SUPERSOLID WOLFRAM")),
         _ => gui::draw_text(canvas, x, y, (255, 255, 255), String::from("GLASS")),
     }
 }
